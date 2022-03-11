@@ -19,7 +19,7 @@ app.use(bodyParser.json({ limit: '10mb', type: 'application/json' }));
 
 app.route('/')
   .get(function (_, res) {
-    res.sendFile(process.cwd() + '/views/index.html');
+    res.sendFile(process.cwd()+'/public/index.html');
   })
 
 app.use('/api', router);

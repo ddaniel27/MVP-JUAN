@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST APP</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #333;
+            background-color: #fff;
+            width:100vw;
+            height:100vh;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .search-container {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .seller-container{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>SEARCH YOUR SELLER</h1>
+    <div class="search-container">
+        <form action="/api/seller" method="get">
+            <input type="text" name="search" placeholder="ABC123">
+            <button type="submit">SEARCH</button>
+        </form>
+    </div>
+
+    <div class="seller-container">
+        <h2>SELLER</h2>
+        <div class="seller-info">
+            <div class="seller-name">
+                <h3 id="name"></h3>
+            </div>
+            <div class="seller-phone">
+                <h3 id="phone"></h3>
+            </div>
+            <div class="seller-pic">
+                <img alt="profile-pic" id="profile-pic" src="">
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const search = document.querySelector('input[name=search]').value;
+            const name = document.querySelector('#name');
+            const phone = document.querySelector('#phone');
+            const pic = document.querySelector('#profile-pic');
+            const sellerContainer = document.querySelector('.seller-container');
+
+            fetch(`${window.location.href}api/seller?code=${search}`)
+                .then(res => res.json())
+                .then(data => {
+                    sellerContainer.style.display = 'block';
+                    if(!data.length){
+                        pic.style.display = 'none';
+                        name.innerText = 'No seller found';
+                    }
+                    else{
+                        const profile = data[0]
+                        name.innerText = `Name: ${profile.name}`;
+                        phone.innerText = `Phone: ${profile.Phone}`;
+                        pic.style.display = 'block';
+                        pic.src = profile.pic;
+                    }
+                    
+                })
+                .catch(err => console.log(err));
+        });
+    </script>
+</body>
+</html>
